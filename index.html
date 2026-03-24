@@ -6,32 +6,24 @@
     <title>CMI OSINT Hackathon - ShadowHunter</title>
     <style>
         body { background-color: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-
         .terminal { background: #000; border: 1px solid #00ff41; padding: 25px; max-width: 700px; width: 100%; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); margin-bottom: 30px; }
-
         h1 { text-align: center; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid #00ff41; padding-bottom: 10px; }
-        h2 { font-size: 18px; text-transform: uppercase; border-bottom: 1px dashed #00ff41; padding-bottom: 5px; margin-top: 0; }
-
         .input-box { margin: 20px 0; border-bottom: 1px solid #111; padding-bottom: 10px; }
         label { display: block; margin-bottom: 5px; color: #00ff41; font-weight: bold; }
         input { width: 100%; padding: 12px; background: #111; border: 1px solid #00ff41; color: #00ff41; box-sizing: border-box; outline: none; transition: 0.3s; }
-
         .hint-btn { background: none; border: 1px solid #555; color: #555; padding: 5px 10px; font-size: 12px; cursor: pointer; margin-top: 5px; }
-        .hint-btn:hover { border-color: #00ff41; color: #00ff41; }
         .hint-text { display: none; color: #888; font-size: 13px; margin-top: 5px; font-style: italic; }
-
         .verify-btn { width: 100%; padding: 15px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; }
-        .verify-btn:hover { background: #008f11; color: #fff; }
-
-        #congrats { display: none; margin-top: 20px; border: 2px dashed gold; padding: 20px; text-align: center; color: gold; }
         .download { color: #00ff41; text-decoration: underline; margin-bottom: 20px; display: block; text-align: center; font-weight: bold; }
 
-        /* Tools Sectie Styling */
+        /* Sectie voor de naam-input na succes */
+        #name-gate { display: none; border-top: 2px solid gold; margin-top: 20px; padding-top: 20px; }
+        #congrats { display: none; margin-top: 20px; border: 2px dashed gold; padding: 20px; text-align: center; color: gold; }
+        #unique-code { font-size: 22px; font-weight: bold; background: #332b00; padding: 10px; display: inline-block; margin-top: 10px; letter-spacing: 2px; }
+
         .tools-section { max-width: 700px; width: 100%; color: #888; border: 1px solid #333; padding: 20px; background: #050505; border-radius: 5px; }
         .tools-list { list-style: none; padding: 0; }
-        .tools-list li { margin-bottom: 10px; }
         .tools-list a { color: #00ff41; text-decoration: none; font-weight: bold; }
-        .tools-list a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -40,51 +32,63 @@
     <h1>OSINT CHALLENGE #1</h1>
     <p>> Bestanden onderschept. Analyseer de metadata en verborgen lagen.</p>
     <p>> Maak gebruik van OSINT tools om de informatie te vinden.</p>
+    <p> Gebruik maken van de hint geeft strafpunten, maar kan helpen als je vastzit.</p>
 
-    <a href="wijnhaven107.png" download class="download">[ DOWNLOAD BEWIJSMATERIAAL.PNG ]</a>
+    <a href="wijnhaven107.png" download class="download">[DOWNLOAD WIJNHAVEN107.PNG]</a>
 
-    <div class="input-box">
-        <label>1. Wat is de GitHub-gebruikersnaam van de maker?</label>
-        <input type="text" id="a1" placeholder="Gevonden in de broncode (Notepad)...">
-        <button class="hint-btn" onclick="showHint(1)">HINT (+1)</button>
-        <div id="h1" class="hint-text">"Decodeer de Base64 string die onderaan het bestand staat."</div>
+    <div id="challenge-inputs">
+        <div class="input-box">
+            <label>1. GitHub-gebruikersnaam:</label>
+            <input type="text" id="a1">
+            <button class="hint-btn" onclick="showHint(1)">HINT</button>
+            <div id="h1" class="hint-text">"Open de PNG in Notepad."</div>
+        </div>
+
+        <div class="input-box">
+            <label>2. IP-adres:</label>
+            <input type="text" id="a2">
+            <button class="hint-btn" onclick="showHint(2)">HINT</button>
+            <div id="h2" class="hint-text">"Gebruik nslookup op het domein in het GitHub project."</div>
+        </div>
+
+        <div class="input-box">
+            <label>3. Geheime Projectnaam:</label>
+            <input type="text" id="a3">
+            <button class="hint-btn" onclick="showHint(3)">HINT</button>
+            <div id="h3" class="hint-text">"Gebruik <a href="https://stylesuxx.github.io/steganography/" target="_blank" style="color: #888; text-decoration: none;">steganography</a> voor de pixels (LSB)."</div>
+        </div>
+
+        <div class="input-box">
+            <label>4. Straatnaam schoollocatie:</label>
+            <input type="text" id="a4">
+            <button class="hint-btn" onclick="showHint(4)">HINT</button>
+            <div id="h4" class="hint-text">"Waar zit de HR-locatie voor IT?"</div>
+        </div>
+
+        <div class="input-box">
+            <label>5. Wachtwoord uit ZIP:</label>
+            <input type="text" id="a5">
+            <button class="hint-btn" onclick="showHint(5)">HINT</button>
+            <div id="h5" class="hint-text">"Vind de ZIP in de PNG. Wachtwoord is antwoord van vraag 4."</div>
+        </div>
+
+        <button class="verify-btn" onclick="verifyChallenges()">CONTROLEER ANTWOORDEN</button>
     </div>
 
-    <div class="input-box">
-        <label>2. Wat is het IP-adres van de schoolwebsite uit het GitHub-project?</label>
-        <input type="text" id="a2" placeholder="X.X.X.X">
-        <button class="hint-btn" onclick="showHint(2)">HINT (+1)</button>
-        <div id="h2" class="hint-text">"Zoek de host 'hint.hr.nl' op het GitHub-profiel en doe een nslookup."</div>
+    <div id="name-gate">
+        <h2 style="color:gold">Systeem gekraakt!</h2>
+        <p>Voer je volledige naam in om je unieke verificatiecode te genereren:</p>
+        <input type="text" id="student-name" placeholder="Voornaam Achternaam">
+        <button class="verify-btn" style="background:gold" onclick="generateFinalCode()">GENEREER CODE</button>
     </div>
-
-    <div class="input-box">
-        <label>3. Wat is de naam van het geheime project? (Steganografie):</label>
-        <input type="text" id="a3" placeholder="Projectnaam...">
-        <button class="hint-btn" onclick="showHint(3)">HINT (+1)</button>
-        <div id="h3" class="hint-text">"Gebruik een steganografie-tool om de verborgen tekstlaag in de pixels te lezen."</div>
-    </div>
-
-    <div class="input-box">
-        <label>4. In welke straat staat de schoollocatie van de gebruiker?</label>
-        <input type="text" id="a4" placeholder="Straatnaam...">
-        <button class="hint-btn" onclick="showHint(4)">HINT (+1)</button>
-        <div id="h4" class="hint-text">"De website hint.hr.nl hoort bij de Hogeschool Rotterdam. Waar zit de CMI faculteit?"</div>
-    </div>
-
-    <div class="input-box">
-        <label>5. Wat is het finale wachtwoord?</label>
-        <input type="text" id="a5" placeholder="Gevonden in de .txt...">
-        <button class="hint-btn" onclick="showHint(5)">HINT (+1)</button>
-        <div id="h5" class="hint-text">"De afbeelding bevat een verborgen ZIP. Gebruik tools zoals 7-Zip om de inhoud te extraheren."</div>
-    </div>
-
-    <button class="verify-btn" onclick="verify()">SYSTEM VERIFICATION</button>
 
     <div id="congrats">
-        <h2>ACCESS GRANTED</h2>
-        <p>Gefeliciteerd agent! Je hebt alle lagen van de hackathon gekraakt.</p>
-        <p id="hint-score"></p>
-        <p>Jury verificatiecode: <strong>CMI_2026_SHADOW_SUCCESS</strong></p>
+        <h2>MISSION ACCOMPLISHED</h2>
+        <p>Gefeliciteerd, agent <span id="display-name"></span>.</p>
+        <p>Jouw unieke verificatiecode:</p>
+        <div id="unique-code"></div>
+        <p style="font-size: 12px; margin-top: 15px;">Lever deze code in bij de jury.</p>
+        <p id="hint-score" style="font-size: 12px;"></p>
     </div>
 </div>
 
@@ -111,48 +115,78 @@
         }
     }
 
-    function verify() {
-        const v1 = document.getElementById('a1').value.trim();
-        const v2 = document.getElementById('a2').value.trim();
-        const v3 = document.getElementById('a3').value.toLowerCase().trim();
-        const v4 = document.getElementById('a4').value.toLowerCase().trim();
-        const v5 = document.getElementById('a5').value.trim();
+    function convrt(str) {
+        let result = '';
+        for (let i = 0; i < str.length; i++) {
+            result += str.charCodeAt(i).toString(16);
+        }
+        return result;
+    }
+
+    function verifyChallenges() {
+        const v = [
+            document.getElementById('a1').value.trim(),
+            document.getElementById('a2').value.trim(),
+            document.getElementById('a3').value.toLowerCase().trim(),
+            document.getElementById('a4').value.toLowerCase().trim(),
+            document.getElementById('a5').value.trim()
+        ];
 
         const check = [
-            "c2hhZG93aHVudGVySFI=",
-            "MTQ1LjI0LjE1OS4xMTc=",
-            "cHJvamVjdF93aWpuaGF2ZW5fMTA3",
-            "d2lqbmhhdmVu",
-            "SGFja2F0aG9uSmFuczEyNjc/"
+            "736861646f7768756e7465724852",
+            "3134352e32342e3135392e313137",
+            "70726f6a6563745f77696a6e686176656e5f313037",
+            "77696a6e686176656e",
+            "4861636b6174686f6e4a616e73313236373f"
         ];
 
         let allCorrect = true;
-        const inputs = [v1, v2, v3, v4, v5];
-
-        for (let i = 0; i < inputs.length; i++) {
+        for (let i = 0; i < v.length; i++) {
             const el = document.getElementById('a' + (i + 1));
-            try {
-                if (btoa(inputs[i]) === check[i]) {
-                    el.style.borderColor = "#00ff41";
-                    el.style.boxShadow = "0 0 10px #00ff41";
-                } else {
-                    el.style.borderColor = "#ff4141";
-                    el.style.boxShadow = "0 0 10px #ff4141";
-                    allCorrect = false;
-                }
-            } catch (e) {
+            if (convrt(v[i]) === check[i]) {
+                el.style.borderColor = "#00ff41";
+                el.style.boxShadow = "0 0 10px #00ff41";
+            } else {
                 el.style.borderColor = "#ff4141";
+                el.style.boxShadow = "0 0 10px #ff4141";
                 allCorrect = false;
             }
         }
 
         if (allCorrect) {
-            document.getElementById('congrats').style.display = 'block';
-            document.getElementById('hint-score').innerText = "Totaal aantal hints gebruikt: " + hintsUsed;
-            window.scrollTo(0, document.body.scrollHeight);
+            document.getElementById('challenge-inputs').style.display = 'none';
+            document.getElementById('name-gate').style.display = 'block';
         } else {
-            alert("Systeemfout: Toegang geweigerd. Corrigeer de rood gemarkeerde velden.");
+            alert("Toegang geweigerd. De binaire handtekening komt niet overeen.");
         }
+    }
+
+    function generateFinalCode() {
+        const name = document.getElementById('student-name').value.trim();
+        if (name.length < 3) {
+            alert("Voer je volledige naam in.");
+            return;
+        }
+
+        const salt = "ROTTERDAM_010";
+        const date = new Date().toLocaleDateString();
+        const raw = name.toUpperCase() + salt + date;
+
+        let hash = 0;
+        for (let i = 0; i < raw.length; i++) {
+            hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+            hash |= 0;
+        }
+
+        const uniqueID = Math.abs(hash).toString(16).toUpperCase();
+        const finalCode = `CMI-${uniqueID.slice(0,4)}-${uniqueID.slice(4,8)}-2026`;
+
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('unique-code').innerText = finalCode;
+        document.getElementById('hint-score').innerText = "Hints gebruikt: " + hintsUsed;
+
+        document.getElementById('name-gate').style.display = 'none';
+        document.getElementById('congrats').style.display = 'block';
     }
 </script>
 
