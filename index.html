@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMI OSINT Hackathon - ShadowHunter</title>
+    <style>
+        body { background-color: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+
+        .terminal { background: #000; border: 1px solid #00ff41; padding: 25px; max-width: 700px; width: 100%; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); margin-bottom: 30px; }
+
+        h1 { text-align: center; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid #00ff41; padding-bottom: 10px; }
+        h2 { font-size: 18px; text-transform: uppercase; border-bottom: 1px dashed #00ff41; padding-bottom: 5px; margin-top: 0; }
+
+        .input-box { margin: 20px 0; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        label { display: block; margin-bottom: 5px; color: #00ff41; font-weight: bold; }
+        input { width: 100%; padding: 12px; background: #111; border: 1px solid #00ff41; color: #00ff41; box-sizing: border-box; outline: none; transition: 0.3s; }
+
+        .hint-btn { background: none; border: 1px solid #555; color: #555; padding: 5px 10px; font-size: 12px; cursor: pointer; margin-top: 5px; }
+        .hint-btn:hover { border-color: #00ff41; color: #00ff41; }
+        .hint-text { display: none; color: #888; font-size: 13px; margin-top: 5px; font-style: italic; }
+
+        .verify-btn { width: 100%; padding: 15px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; }
+        .verify-btn:hover { background: #008f11; color: #fff; }
+
+        #congrats { display: none; margin-top: 20px; border: 2px dashed gold; padding: 20px; text-align: center; color: gold; }
+        .download { color: #00ff41; text-decoration: underline; margin-bottom: 20px; display: block; text-align: center; font-weight: bold; }
+
+        /* Tools Sectie Styling */
+        .tools-section { max-width: 700px; width: 100%; color: #888; border: 1px solid #333; padding: 20px; background: #050505; border-radius: 5px; }
+        .tools-list { list-style: none; padding: 0; }
+        .tools-list li { margin-bottom: 10px; }
+        .tools-list a { color: #00ff41; text-decoration: none; font-weight: bold; }
+        .tools-list a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="terminal">
+    <h1>OSINT CHALLENGE #1</h1>
+    <p>> Bestanden onderschept. Analyseer de metadata en verborgen lagen.</p>
+    <p>> Maak gebruik van OSINT tools om de informatie te vinden.</p>
+
+    <a href="wijnhaven107.png" download class="download">[ DOWNLOAD BEWIJSMATERIAAL.PNG ]</a>
+
+    <div class="input-box">
+        <label>1. Wat is de GitHub-gebruikersnaam van de maker?</label>
+        <input type="text" id="a1" placeholder="Gevonden in de broncode (Notepad)...">
+        <button class="hint-btn" onclick="showHint(1)">HINT (+1)</button>
+        <div id="h1" class="hint-text">"Decodeer de Base64 string die onderaan het bestand staat."</div>
+    </div>
+
+    <div class="input-box">
+        <label>2. Wat is het IP-adres van de schoolwebsite uit het GitHub-project?</label>
+        <input type="text" id="a2" placeholder="X.X.X.X">
+        <button class="hint-btn" onclick="showHint(2)">HINT (+1)</button>
+        <div id="h2" class="hint-text">"Zoek de host 'hint.hr.nl' op het GitHub-profiel en doe een nslookup."</div>
+    </div>
+
+    <div class="input-box">
+        <label>3. Wat is de naam van het geheime project? (Steganografie):</label>
+        <input type="text" id="a3" placeholder="Projectnaam...">
+        <button class="hint-btn" onclick="showHint(3)">HINT (+1)</button>
+        <div id="h3" class="hint-text">"Gebruik een steganografie-tool om de verborgen tekstlaag in de pixels te lezen."</div>
+    </div>
+
+    <div class="input-box">
+        <label>4. In welke straat staat de schoollocatie van de gebruiker?</label>
+        <input type="text" id="a4" placeholder="Straatnaam...">
+        <button class="hint-btn" onclick="showHint(4)">HINT (+1)</button>
+        <div id="h4" class="hint-text">"De website hint.hr.nl hoort bij de Hogeschool Rotterdam. Waar zit de CMI faculteit?"</div>
+    </div>
+
+    <div class="input-box">
+        <label>5. Wat is het finale wachtwoord?</label>
+        <input type="text" id="a5" placeholder="Gevonden in de .txt...">
+        <button class="hint-btn" onclick="showHint(5)">HINT (+1)</button>
+        <div id="h5" class="hint-text">"De afbeelding bevat een verborgen ZIP. Gebruik tools zoals 7-Zip om de inhoud te extraheren."</div>
+    </div>
+
+    <button class="verify-btn" onclick="verify()">SYSTEM VERIFICATION</button>
+
+    <div id="congrats">
+        <h2>ACCESS GRANTED</h2>
+        <p>Gefeliciteerd agent! Je hebt alle lagen van de hackathon gekraakt.</p>
+        <p id="hint-score"></p>
+        <p>Jury verificatiecode: <strong>CMI_2026_SHADOW_SUCCESS</strong></p>
+    </div>
+</div>
+
+<div class="tools-section">
+    <h2>Aanbevolen Gereedschap</h2>
+    <p>Nieuw in OSINT? Gebruik deze tools om de puzzels op te lossen:</p>
+    <ul class="tools-list">
+        <li><strong>Decoderen:</strong> <a href="https://gchq.github.io/CyberChef/" target="_blank">CyberChef</a> - Dé "Swiss Army Knife" voor het omzetten van Base64 en andere data.</li>
+        <li><strong>Pixels & Stego:</strong> <a href="https://stegonline.georgeom.net/" target="_blank">StegOnline</a> of <a href="https://www.aperisolve.com/" target="_blank">Aperi'Solve</a> - Bekijk verborgen lagen in afbeeldingen.</li>
+        <li><strong>Netwerk & DNS:</strong> Gebruik <a href="https://viewdns.info/" target="_blank">ViewDNS.info</a> of typ <code>nslookup</code> in je eigen terminal.</li>
+        <li><strong>Bestand Extractie:</strong> Gebruik <a href="https://www.7-zip.org/" target="_blank">7-Zip</a> (Rechtermuisknop > Open Archief) of <a href="https://futureboy.us/stegano/decoy-zip.html" target="_blank">Binwalk</a> om de verborgen ZIP uit de afbeelding te halen.</li>
+    </ul>
+</div>
+
+<script>
+    let hintsUsed = 0;
+    const hintsOpened = [false, false, false, false, false, false];
+
+    function showHint(id) {
+        if (!hintsOpened[id]) {
+            hintsUsed++;
+            hintsOpened[id] = true;
+            document.getElementById('h' + id).style.display = 'block';
+        }
+    }
+
+    function verify() {
+        const v1 = document.getElementById('a1').value.trim();
+        const v2 = document.getElementById('a2').value.trim();
+        const v3 = document.getElementById('a3').value.toLowerCase().trim();
+        const v4 = document.getElementById('a4').value.toLowerCase().trim();
+        const v5 = document.getElementById('a5').value.trim();
+
+        const check = [
+            "c2hhZG93aHVudGVySFI=",
+            "MTQ1LjI0LjE1OS4xMTc=",
+            "cHJvamVjdF93aWpuaGF2ZW5fMTA3",
+            "d2lqbmhhdmVu",
+            "SGFja2F0aG9uSmFuczEyNjc/"
+        ];
+
+        let allCorrect = true;
+        const inputs = [v1, v2, v3, v4, v5];
+
+        for (let i = 0; i < inputs.length; i++) {
+            const el = document.getElementById('a' + (i + 1));
+            try {
+                if (btoa(inputs[i]) === check[i]) {
+                    el.style.borderColor = "#00ff41";
+                    el.style.boxShadow = "0 0 10px #00ff41";
+                } else {
+                    el.style.borderColor = "#ff4141";
+                    el.style.boxShadow = "0 0 10px #ff4141";
+                    allCorrect = false;
+                }
+            } catch (e) {
+                el.style.borderColor = "#ff4141";
+                allCorrect = false;
+            }
+        }
+
+        if (allCorrect) {
+            document.getElementById('congrats').style.display = 'block';
+            document.getElementById('hint-score').innerText = "Totaal aantal hints gebruikt: " + hintsUsed;
+            window.scrollTo(0, document.body.scrollHeight);
+        } else {
+            alert("Systeemfout: Toegang geweigerd. Corrigeer de rood gemarkeerde velden.");
+        }
+    }
+</script>
+
+</body>
+</html>
